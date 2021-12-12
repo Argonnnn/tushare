@@ -66,3 +66,7 @@ df = pd.concat(ans)
 toSave = df.pivot(columns= 'ts_code',index = 'trade_date',values = 'adj_factor')
 toSave.index = [str(q) for q in toSave.index]
 toSave.to_pickle('adj_factor.pkl')
+
+# ['605333','11/10',17.50]
+# ['301072','11/19',41.33]
+# ['']

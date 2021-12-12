@@ -33,7 +33,8 @@ class update():
         for i in name:
             print(i + ' begin')
             tempD = pd.read_pickle(i + '.pkl')
-            tempD = tempD[:-1]
+            if tempD.index[-1] == self.startDay:
+                tempD = tempD[:-1]
             toBeAppend = df.pivot(columns='ts_code', index='trade_date', values=i)
             toSave = pd.concat([tempD, toBeAppend], axis=0)
             toSave.index = [str(q) for q in toSave.index]
@@ -48,6 +49,7 @@ class update():
         toBeAppend = df.pivot(columns='ts_code', index='trade_date', values='adj_factor')
         toSave = pd.concat([adj, toBeAppend], axis=0)
         toSave.index = [str(q) for q in toSave.index]
+        toSave = toSave.sort_index().reset_index().drop_duplicates(subset='index', keep='first')
         toSave.to_pickle('adj_factor.pkl')
         print(toSave.tail())
         print('adj finished,newest date is '+ self.endDay)
@@ -61,7 +63,8 @@ class update():
         for i in name:
             print(i + ' begin')
             tempD = pd.read_pickle(i + '.pkl')
-            tempD = tempD[:-1]
+            if tempD.index[-1] == self.startDay:
+                tempD = tempD[:-1]
             toBeAppend = df.pivot(columns='ts_code', index='trade_date', values=i)
             toSave = pd.concat([tempD, toBeAppend], axis=0)
             toSave.index = [str(q) for q in toSave.index]
@@ -70,4 +73,9 @@ class update():
 
 
 
-
+if __name__== '_main_':
+    path = r'D:\factor'
+    Up = update(path)
+    Up.update_adj()
+    Up.update_daily()
+    Up.update_daily_basic()
